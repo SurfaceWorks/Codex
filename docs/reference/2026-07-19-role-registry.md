@@ -9,7 +9,7 @@ grow by PR.** A product may use `unmapped` or a vendor role and still render. Co
 the long tail is a product's own extension. **Surface type:** A = device-control, B = deck/input. **Nature:**
 W = write/settable, R = read-only telemetry, A = action/momentary.
 **Cross-cutting contract implications** (compound/array value types, bidirectional binding, mode-gating, the
-deck binding/action axis) live with the contract in **CommonTongue** (`docs/_working/reference/`), which this
+deck binding/action axis) live with the contract in **CommonTongue** (`docs/reference/`), which this
 prototype was split out of.
 
 ---
