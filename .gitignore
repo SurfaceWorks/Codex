@@ -1,0 +1,19 @@
+# Never a superpowers path.
+superpowers/
+**/superpowers/
+
+# macOS
+.DS_Store
+
+# Editor / scratch
+*.swp
+*~
+.idea/
+.vscode/
+
+# Node / build
+node_modules/
+dist/
+build/
+/target/
+**/target/
