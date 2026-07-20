@@ -6,8 +6,13 @@ meters · streaming/macro decks · virtual/touch surfaces · pro-AV/DAW/grading)
 camera vocabulary.
 **Recommended, not required · `lowercase_snake` (open-registry casing) · vendor tail `x.<vendor>.<name>` ·
 grow by PR.** A product may use `unmapped` or a vendor role and still render. Coverage target: standard 90%;
-the long tail is a product's own extension. **Surface type:** A = device-control, B = deck/input. **Nature:**
-W = write/settable, R = read-only telemetry, A = action/momentary.
+the long tail is a product's own extension. **Surface type:** A = device-control, B = deck/input. **Nature**
+(coarse ROLE-level capability): `settable` = a property a client sets · `readonly` = telemetry a client
+observes · `action` = a momentary thing a client fires. **Nature does NOT state read-write vs write-only** —
+that is a per-*device* fact owned by the **CommonTongue** descriptor (`PropertyPayload.Access` READ_ONLY /
+READ_WRITE / WRITE_ONLY, plus the value `Confidence` axis CONFIRMED / COMMANDED for a write-only device). The
+same `settable` role is read-write on a device that reports back and write-only on one that does not (e.g. a
+write-only fixture); Codex references that axis, never restates it.
 **Cross-cutting contract implications** (compound/array value types, bidirectional binding, mode-gating, the
 deck binding/action axis) live with the contract in **CommonTongue** (`docs/reference/`), which this
 prototype was split out of.

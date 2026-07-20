@@ -51,6 +51,45 @@ deleted to tidy.
 
 ---
 
+### D-002 — `nature` is a coarse role-capability axis; read-write vs write-only lives in the contract
+- **Status:** accepted
+- **Date:** 2026-07-19
+- **What:** `nature` changed from `W / R / A` to **`settable` / `readonly` / `action`** — the coarse
+  ROLE-level capability (does a client set it, observe it, or fire it). The registry **no longer**
+  attempts to state read-write vs write-only. That read/write/confidence honesty is a per-**device**
+  fact already owned by the **CommonTongue** descriptor: `PropertyPayload.Access`
+  (READ_ONLY / READ_WRITE / WRITE_ONLY) plus the value `Confidence` axis
+  (CONFIRMED / COMMANDED / UNKNOWN / STALE — "commanded ≠ confirmed" for a write-only device).
+- **Why — the old `W` was an active correctness defect, confirmed against three lenses + doctrine:**
+  - **Correctness / single-source-of-truth:** a bare `W` conflated *read-write* (settable **and**
+    observable) with *write-only* (settable, **no readback ever**), and could express neither honestly.
+    The same role is read-write on a device that reports back and **write-only** on one that does not
+    (a real owned example: a write-only fixture — you send intensity/CCT and it never reports back).
+    Read-back-ness is therefore a **device** fact, not a **role** fact; pinning it on the role made
+    Codex lie about half of all devices. It also **duplicated** an axis the contract already owns
+    (`Access` + `Confidence`) — restating, not referencing (SoT violation). Fix: stop restating;
+    Codex holds only the coarse axis and references the contract for RW/WO/RO.
+  - **Best Practices:** RW / WO / RO is the standard access-mode vocabulary (W3C WoT `readOnly`/
+    `writeOnly`; OPC-UA AccessLevel; MODBUS; register RO/WO/RW conventions; the WoT
+    property/action/event split = our settable/readonly/action). A bare `W` with no RW/WO distinction
+    is the non-idiomatic outlier. The idiomatic home for RW/WO/RO is per-property on the descriptor —
+    which is exactly where CommonTongue already put it (`PropertyPayload.Access`).
+  - **North Stars (Accessibility #1):** a renderer must announce the truth about a control's state; a
+    write-only control must render/announce *commanded, unconfirmed*, never a fabricated confirmed
+    value (confidence-scoring §7 "never ship a guessed value dressed as a measured one"; ws-control §2
+    write-only case). The coarse `settable` + the descriptor's `Access`/`Confidence` carry that truth;
+    a bare `W` erased it.
+  - **Doctrine already decided this:** ws-control-doctrine §2 names write-only as the "extreme case
+    that proves the rule"; cold-start-acceptance names write-only devices explicitly; the contract's
+    `Confidence.COMMANDED` comment already reads "no readback exists (a write-only device's normal
+    state)." The contract was right; Codex's `nature` was the thing out of step.
+- **Supersedes:** the `nature: W/R/A` portion of D-001. Rest of D-001 (JSON-Schema data-registry form)
+  stands.
+- **Provenance:** `[V]` — schema valid draft-2020-12; 196 roles revalidate (118 settable / 42 readonly
+  / 36 action); negative controls confirm the old `W` is now **rejected**; referential integrity holds.
+
+---
+
 ## Open items — do NOT build on these
 
 ### O-101 — Vocabulary is a prototype, not frozen

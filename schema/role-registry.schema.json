@@ -58,8 +58,8 @@
         },
         "nature": {
           "type": "string",
-          "description": "W = write/settable · R = read-only telemetry · A = action/momentary. The REQUIRED honesty axis — a renderer must know whether a role is settable, observed, or fired.",
-          "enum": ["W", "R", "A"]
+          "description": "The role's coarse capability kind: 'settable' = a property a client sets · 'readonly' = telemetry a client only observes · 'action' = a momentary thing a client fires. This is the ROLE-level fact. It does NOT state read-write vs write-only — that is a per-DEVICE fact owned by the CommonTongue descriptor (PropertyPayload.Access: READ_ONLY / READ_WRITE / WRITE_ONLY) together with the value Confidence axis (CONFIRMED / COMMANDED for a write-only device). The same role is read-write on a device that reports back and write-only on one that does not (e.g. a write-only fixture); Codex therefore does not — and cannot honestly — pin that here. Referenced, never restated (single-source-of-truth).",
+          "enum": ["settable", "readonly", "action"]
         },
         "label": {
           "type": "string",
