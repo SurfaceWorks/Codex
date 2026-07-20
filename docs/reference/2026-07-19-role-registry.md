@@ -6,13 +6,14 @@ meters · streaming/macro decks · virtual/touch surfaces · pro-AV/DAW/grading)
 camera vocabulary.
 **Recommended, not required · `lowercase_snake` (open-registry casing) · vendor tail `x.<vendor>.<name>` ·
 grow by PR.** A product may use `unmapped` or a vendor role and still render. Coverage target: standard 90%;
-the long tail is a product's own extension. **Surface type:** A = device-control, B = deck/input. **Nature**
-(coarse ROLE-level capability): `settable` = a property a client sets · `readonly` = telemetry a client
-observes · `action` = a momentary thing a client fires. **Nature does NOT state read-write vs write-only** —
-that is a per-*device* fact owned by the **CommonTongue** descriptor (`PropertyPayload.Access` READ_ONLY /
-READ_WRITE / WRITE_ONLY, plus the value `Confidence` axis CONFIRMED / COMMANDED for a write-only device). The
-same `settable` role is read-write on a device that reports back and write-only on one that does not (e.g. a
-write-only fixture); Codex references that axis, never restates it.
+the long tail is a product's own extension. **Nature** (coarse ROLE-level capability): `settable` = a
+property a client sets · `readonly` = telemetry a client observes · `action` = a momentary thing a client
+fires. **Nature does NOT state read-write vs write-only** — that is a per-*device* fact owned by the
+**CommonTongue** descriptor (`PropertyPayload.Access` READ_ONLY / READ_WRITE / WRITE_ONLY, plus the value
+`Confidence` axis CONFIRMED / COMMANDED for a write-only device). The same `settable` role is read-write on
+a device that reports back and write-only on one that does not (e.g. a write-only fixture); Codex references
+that axis, never restates it. A role's **`group`** implies its surface kind (`universal`/`lighting`/
+`metering`/`camera` = device-control; `deck_affordance`/`deck_binding` = deck-input; `pro_av` = both).
 **Cross-cutting contract implications** (compound/array value types, bidirectional binding, mode-gating, the
 deck binding/action axis) live with the contract in **CommonTongue** (`docs/reference/`), which this
 prototype was split out of.
@@ -21,9 +22,11 @@ prototype was split out of.
 form of the vocabulary is **[`data/roles.json`](../../data/roles.json)**, validated by
 **[`schema/role-registry.schema.json`](../../schema/role-registry.schema.json)** (JSON Schema 2020-12).
 Renderers (Lucidity and others) consume the data; grow the vocabulary by PR against the data (add an
-entry — every entry must carry `surfaceType`, `nature`, and an `unmappedFallback`). The form and its
-rationale are recorded in [`decision-log.md`](decision-log.md) (D-001). The sections below narrate the
-same set the data holds; on any discrepancy, **the data is the source of truth**.
+entry — every entry must carry `group`, `nature`, and an `accessibleFallback`: the first-class accessible
+role a renderer uses for an unrecognised role). Referential integrity (every `accessibleFallback`/`gatedBy`
+resolves to a real role) is enforced by [`scripts/check-registry.py`](../../scripts/check-registry.py). The
+form and its rationale are recorded in [`decision-log.md`](decision-log.md) (D-001, D-002, D-003). The
+sections below narrate the same set the data holds; on any discrepancy, **the data is the source of truth**.
 
 ---
 

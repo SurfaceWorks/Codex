@@ -90,6 +90,40 @@ deleted to tidy.
 
 ---
 
+### D-003 — Critical-lens audit fixes (SoT, altitude, a11y wording, enforcement)
+- **Status:** accepted
+- **Date:** 2026-07-19
+- **What:** A critical re-read of the schema (triggered by the D-002 `nature` bug — same class of error
+  suspected elsewhere) found and fixed:
+  - **Removed `valueShape` (scalar/compound/array).** It **restated** the contract's `Value` oneof — the
+    same single-source-of-truth violation as the old `nature`. The value model is owned by CommonTongue
+    (`core.proto` `Value`; per-affordance in the payload) and referenced, never pinned on a role here.
+  - **Removed `surfaceType` (A/B/AB).** Cryptic single letters, and **derivable from `group`** (device
+    groups = device-control surface; `deck_*` = deck-input; `pro_av` = both). Folded the meaning into
+    `group`'s description; dropped the redundant axis.
+  - **Renamed `unmappedFallback` → `accessibleFallback`** and struck all "degrade"/"degrades" wording
+    (Palette shared this). "Degrade" framed the accessible rendering as a *lesser* one — backwards for
+    an accessibility floor whose whole point is a **first-class, fully-operable** rendering. Best
+    Practices + the Accessibility North Star: name it for what it is.
+  - **Added `scripts/check-registry.py`** — enforces schema-conformance **and** referential integrity
+    (every `accessibleFallback`/`gatedBy` resolves to a real role), which JSON Schema cannot express
+    natively. Closes the unenforced-invariant gap (interface-stability: make it a mechanical gate over
+    the schema, verified by attack — the negative control confirms a dangling fallback → exit 1).
+  - **`$id`** changed from an invented `surfaceworks.dev` domain to the real, resolvable repo raw URL
+    (Best Practice: `$id` should be a stable, dereferenceable absolute URI).
+  - **`status` enum semantics** documented: `prototype` = close to final shape but consumers building
+    against it (Lucidity, DeckLibre) may still force breaking changes; `stable` = owner-triggered
+    additive-only-forever commitment. Everything stays `prototype` until the consumer apps are closer to
+    done. (Values unchanged; description made honest — no bogus third value.)
+- **Why:** all fixes trace to the same three lenses as D-002 — Correctness/SoT (don't restate contract
+  facts; don't model a device fact as a role fact), Best Practices (idiomatic access vocab, resolvable
+  `$id`, mechanical enforcement), and the Accessibility North Star (the fallback wording).
+- **Provenance:** `[V]` — schema valid draft-2020-12; 196 roles revalidate after the field changes;
+  `scripts/check-registry.py` passes; negative control confirms the integrity gate rejects a dangling
+  fallback.
+
+---
+
 ## Open items — do NOT build on these
 
 ### O-101 — Vocabulary is a prototype, not frozen
