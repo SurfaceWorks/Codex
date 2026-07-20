@@ -12,6 +12,14 @@ W = write/settable, R = read-only telemetry, A = action/momentary.
 deck binding/action axis) live with the contract in **CommonTongue** (`docs/reference/`), which this
 prototype was split out of.
 
+**Authoritative artifact:** this document is **human narration**. The machine-readable, authoritative
+form of the vocabulary is **[`data/roles.json`](../../data/roles.json)**, validated by
+**[`schema/role-registry.schema.json`](../../schema/role-registry.schema.json)** (JSON Schema 2020-12).
+Renderers (Lucidity and others) consume the data; grow the vocabulary by PR against the data (add an
+entry — every entry must carry `surfaceType`, `nature`, and an `unmappedFallback`). The form and its
+rationale are recorded in [`decision-log.md`](decision-log.md) (D-001). The sections below narrate the
+same set the data holds; on any discrepancy, **the data is the source of truth**.
+
 ---
 
 ## 0. Universal (every device — the interop-load-bearing overlap)

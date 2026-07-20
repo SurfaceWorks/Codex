@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://surfaceworks.dev/codex/role-registry.schema.json",
+  "title": "Codex Role Registry",
+  "description": "Schema for the open, recommended-not-required Codex role vocabulary. A role is the semantic MEANING of a control (what it is, not how it draws). The registry data (roles.json) is the authoritative machine artifact; docs/reference/*-role-registry.md is its human narration. This schema validates the SHAPE of each entry, not the closed set of allowed roles — the vocabulary is open (grow by PR; a product may use `unmapped` or a vendor role and still render).",
+  "type": "object",
+  "required": ["registry", "version", "roles"],
+  "additionalProperties": false,
+  "properties": {
+    "registry": {
+      "type": "string",
+      "const": "codex.roles",
+      "description": "Registry discriminator — identifies this document as the Codex role registry."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Registry version (semver). Grows additively — entries are added, never removed or repurposed."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["prototype", "stable"],
+      "default": "prototype",
+      "description": "Maturity of the vocabulary as a whole. 'prototype' = still moving as consumers build against it."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form registry-level note (e.g. provenance, relationship to the contract)."
+    },
+    "roles": {
+      "type": "array",
+      "description": "The role vocabulary. Open and growable; order is not significant.",
+      "items": { "$ref": "#/$defs/role" }
+    }
+  },
+  "$defs": {
+    "role": {
+      "type": "object",
+      "description": "One semantic role in the Codex vocabulary.",
+      "required": ["role", "group", "surfaceType", "nature", "unmappedFallback"],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Open role identifier. Standard roles use lowercase_snake; a vendor role uses a tail 'x.<vendor>.<name>'. This names the semantic meaning of a control; the meaning's binding to descriptor semantics is owned by the CommonTongue contract and only referenced here, never redefined.",
+          "pattern": "^(x\\.[a-z0-9]+\\.[a-z0-9_]+|[a-z][a-z0-9_]*)$",
+          "minLength": 1
+        },
+        "group": {
+          "type": "string",
+          "description": "Domain grouping this role belongs to.",
+          "enum": ["universal", "lighting", "metering", "camera", "deck_affordance", "deck_binding", "pro_av"]
+        },
+        "surfaceType": {
+          "type": "string",
+          "description": "A = device-control surface · B = deck/input surface. A role may serve both.",
+          "enum": ["A", "B", "AB"]
+        },
+        "nature": {
+          "type": "string",
+          "description": "W = write/settable · R = read-only telemetry · A = action/momentary. The REQUIRED honesty axis — a renderer must know whether a role is settable, observed, or fired.",
+          "enum": ["W", "R", "A"]
+        },
+        "label": {
+          "type": "string",
+          "description": "Optional short human-readable name for the role."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional longer human description of the role's meaning."
+        },
+        "unmappedFallback": {
+          "type": "string",
+          "description": "REQUIRED accessibility/interop floor. The generic role a renderer treats this as when it does not recognise the specific role (an unknown role must still render as a named, operable control, never a nameless box). Standard fallbacks: 'unmapped' (generic), or a nearer universal role. A universal role may fall back to itself or to 'unmapped'.",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "minLength": 1
+        },
+        "valueShape": {
+          "type": "string",
+          "description": "Optional hint that this role's value is not a plain scalar. 'compound' = named tuple (e.g. color_rgb, pan_tilt); 'array' = list (e.g. cri_sample_values R1-R15, spectral_power_distribution). The value model itself is owned by the CommonTongue contract and only referenced here.",
+          "enum": ["scalar", "compound", "array"]
+        },
+        "gatedBy": {
+          "type": "string",
+          "description": "Optional role whose value gates this role's applicability (mode-gating), e.g. lighting colour roles gated by `color_mode`. Must reference another role identifier.",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Optional alternate role spellings this role also answers to (e.g. 'online' alongside 'connection_health').",
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-form per-entry note."
+        }
+      }
+    }
+  }
+}
